@@ -1,0 +1,29 @@
+{
+  "name": "weatherbackend",
+  "version": "1.0.0",
+  "description": "A backend for weather applications.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js",
+    "debug": "node --inspect-brk=9229 app.js",
+    "test": "./node_modules/mocha/bin/mocha ./test/*.test.js"
+  },
+  "keywords": [
+    "weather",
+    "REST",
+    "Veff213"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "js-sha256": "^0.9.0",
+    "mongoose": "^5.4.19"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.1",
+    "mocha": "^6.0.2"
+  }
+}
