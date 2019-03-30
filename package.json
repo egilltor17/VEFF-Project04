@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node app.js",
     "debug": "node --inspect-brk=9229 app.js",
-    "tests": "./node_modules/mocha/bin/mocha ./test/*.test.js",
-    "test": "mocha ./test/*.test.js"
+    "test": "mocha ./test/*.test.js",
+    "tests": "node ./node_modules/mocha/bin/mocha ./test/*.test.js"
   },
   "keywords": [
     "weather",
