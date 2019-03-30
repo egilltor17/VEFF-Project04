@@ -12,6 +12,9 @@ router.use('/:stationId/observations', require('./observations'));
 router.get('/', function (req, res, next) {
     if (req.query.description !== undefined) {
         Station.find({description: req.query.description}, 'description _id', function (err, stations) {
+        // Station.find({description: {"$gt":""}}, 'description _id', function (err, stations) {    // TODO removre
+            console.log(typeof(req.query.description));                                             // TODO removre
+            console.log(req.query.description);                                                     // TODO removre
             if (err) { return next(err); }
             res.status(200).json(stations);
         });
