@@ -98,6 +98,7 @@ describe('Endpoint tests', () => {
         .end((err, res) => {
             chai.expect(res).to.have.status(201);
             chai.expect(res).to.be.json;
+            chai.expect(res).to.be.an('object');
             chai.expect(res.body).to.have.property('_id');
             chai.expect(res.body).to.have.property('description');
             chai.expect(res.body).to.have.property('lat');
@@ -126,7 +127,20 @@ describe('Endpoint tests', () => {
     });
     
     // 7. DELETE /api/v1/stations/:stationId/observations/:obsId
-    it("should make a DELETE request to /api/v1/stations/:stationId/observations/:obsId", function() {
-        chai.expect(1).to.equal(1);
+    it("should make a DELETE request to /api/v1/stations/:stationId/observations/:obsId", (done) => {
+        chai.request('http://localhost:3000').delete(`/api/v1/stations/${stationId}/observations/${observationId}`).end((err, res) => {
+            chai.expect(res).to.have.status(200);
+            chai.expect(res).to.be.json;
+            chai.expect(res.body).to.be.an('object');
+            chai.expect(res.body).to.have.property('temp');
+            chai.expect(res.body).to.have.property('hum');
+            chai.expect(res.body).to.have.property('prec');
+            chai.expect(res.body).to.have.property('windSpeed');
+            chai.expect(res.body).to.have.property('windDir');       
+            chai.expect(res.body).to.have.property('_id');     
+            chai.expect(Object.keys(res.body).length).to.be.equal(6);
+            done();
+        })
+        
     });
 });
