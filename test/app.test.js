@@ -156,9 +156,19 @@ describe('Endpoint tests', () => {
     });
     
     // 6. POST /api/v1/stations/:stationId/observations
-    it("should make a POST request to /api/v1/stations/:stationId/observations", (done) => {
-        chai.expect(1).to.equal(1);
-        done();
+    it("should make a POST request to /api/v1/stations/" + String(stationId)+ "/observations", (done) => {
+        let obs = {temp: 5, windSpeed: 23, hum: 34, prec: 42}
+        chai.request('http://localhost:3000')
+        .post('/api/v1/stations/' + String(stationId) + '/observations')
+        .set('Content-Type','application/json')
+        .send(obs)
+        .end((err, res)=> {
+            chai.expect(res).to.have.status(400);
+            chai.expect(res).to.have.property('body');
+            chai.expect(res.body).to.be.a('object');
+            chai.expect(res.body).to.deep.equal({ "message": "Bad request." })
+            done();
+        });
     });
     
     // 7. DELETE /api/v1/stations/:stationId/observations/:obsId
