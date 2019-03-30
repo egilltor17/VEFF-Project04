@@ -3,6 +3,7 @@ let mongoose = require("mongoose");
 let Station = require('../models/station');
 let Observation = require('../models/observation');
 let server = require('../app');
+var sha256 = require('js-sha256');
 
 //These are the actual modules we use
 let chai = require('chai');
@@ -54,10 +55,8 @@ describe('Endpoint tests', () => {
                 chai.expect(res).to.have.property('body');
                 chai.expect(res.body).to.be.an('array');
                 chai.expect(res.body.length).to.be.equal(1);
-                chai.expect(res.body[0]).to.have.property('_id');
-                chai.expect(res.body[0]).to.have.property('description');
-                chai.expect(res.body[0]._id).to.be.equal(String(stationId));
-                chai.expect(res.body[0].description).to.be.equal('Reykjavik');
+                chai.expect(res.body[0]).to.have.property('_id').equal(String(stationId));;
+                chai.expect(res.body[0]).to.have.property('description').equal('Reykjavik');;
                 chai.expect(Object.keys(res.body[0]).length).to.be.equal(2);
                 done();
         });
@@ -71,16 +70,11 @@ describe('Endpoint tests', () => {
                 chai.expect(res).to.have.status(200);
                 chai.expect(res).to.be.json;
                 chai.expect(res).to.have.property('body');
-                chai.expect(res.body).to.have.property('_id');
-                chai.expect(res.body).to.have.property('description');
-                chai.expect(res.body).to.have.property('lat');
-                chai.expect(res.body).to.have.property('lon');
-                chai.expect(res.body).to.have.property('observations');
-                chai.expect(res.body._id).to.equal(String(stationId));
-                chai.expect(res.body.description).to.be.equal('Reykjavik');
-                chai.expect(res.body.lat).to.be.equal(64.1275);
-                chai.expect(res.body.lon).to.be.equal(21.9028);
-                chai.expect(res.body.observations).to.be.an('array');
+                chai.expect(res.body).to.have.property('_id').equal(String(stationId));
+                chai.expect(res.body).to.have.property('description').equal('Reykjavik');
+                chai.expect(res.body).to.have.property('lat').equal(64.1275);
+                chai.expect(res.body).to.have.property('lon').equal(21.9028);
+                chai.expect(res.body).to.have.property('observations').an('array');
                 chai.expect(Object.keys(res.body).length).to.equal(5);
                 done();
         });
@@ -110,7 +104,7 @@ describe('Endpoint tests', () => {
                 chai.expect(res.body.lon).to.be.equal(18.0907);
                 chai.expect(Object.keys(res.body).length).to.be.equal(4)
                 done();
-            });
+        });
     });
 
     // 4. GET /api/v1/stations/:stationId/observations
@@ -169,7 +163,41 @@ describe('Endpoint tests', () => {
     
     // 8. DELETE /api/v1/stations/:id
     it("should make a DELETE request to /api/v1/stations/:id", (done) => {
-        chai.expect(1).to.equal(1);
-        done();
+        // No authentication.
+        chai.request('http://localhost:3000')
+            .delete('/api/v1/stations/' + stationId)
+            .end((err, res) => {
+                chai.expect(res).to.have.status(401);
+                chai.expect(res).to.be.json;
+                chai.expect(res).to.have.property('body');
+                chai.expect(res.body).to.have.property('message').equal("Unauthorised");
+                done();
+        });
+        chai.request('http://localhost:3000')
+            .delete('/api/v1/stations/' + stationId)
+            .set('authorization', sha256.hmac('mysecret', 'DELETE /api/v1/stations/' + stationId))
+            .end((err, res) => {
+                chai.expect(res).to.have.status(200);
+                done();
+        });
     });
+
+    // 9. Injection attact! ?description=", "$not" : "Reykjavik
+    it('should return wrong entry with GET /api/v1/stations?description=", "$not" : "Reykjavik', (done) => {
+        chai.request('http://localhost:3000')
+            .get('/api/v1/stations?description=", "$not" : "Reykjavik')
+            .end((err, res) => {
+                chai.expect(res).to.have.status(200);
+                chai.expect(res).to.be.json;
+                chai.expect(res).to.have.property('body');
+                chai.expect(res.body).to.have.property('_id');
+                chai.expect(res.body).to.have.property('description').not.equal('Reykjavik');
+                chai.expect(res.body).to.have.property('lat');
+                chai.expect(res.body).to.have.property('lon');
+                chai.expect(res.body).to.have.property('observations').an('array');
+                chai.expect(Object.keys(res.body).length).to.equal(5);
+                done();
+        });
+        
+    }); 
 });
