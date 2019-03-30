@@ -46,4 +46,20 @@ describe('Endpoint tests', () => {
     it("should always pass", function() {
         chai.expect(1).to.equal(1);
     });
+
+    it("should make a get request to stations", (done) => {
+        chai.request('http://localhost:3000').get('/api/v1/stations').end((err, res) => {
+            chai.expect(res).to.have.status(200);
+            chai.expect(res).to.have.property('_id')
+            done();
+        })
+    })
+
+    it("should make a get request to stations", (done) => {
+        chai.request('http://localhost:3000').get('/api/v1/stations/5c9f6d9f95b36e7b2cc474df').end((err, res) => {
+            chai.expect(res).to.have.status(200);
+            done();
+        })
+    })
+    
 });
