@@ -88,13 +88,29 @@ describe('Endpoint tests', () => {
     
     // 3. POST /api/v1/stations
     it("should make a post request to /api/v1/stations", (done) => {
+        let newStation = {
+            description : "Akureyri",
+            lat : 65.6826,
+            lon : 18.0907
+        }
         chai.request('http://localhost:3000')
-            .post('/api/v1/stations')
-            .set('content-type','application/json')
+            .post('/api/v1/stations/')
+            .set("content-type", "application/json")
+            .send(newStation)
             .end((err, res) => {
-                chai.expect(true).to.be.true;
+                chai.expect(res).to.have.status(201);
+                chai.expect(res).to.be.json;
+                chai.expect(res.body).to.have.property('_id');
+                chai.expect(res.body).to.have.property('description');
+                chai.expect(res.body).to.have.property('lat');
+                chai.expect(res.body).to.have.property('lon');
+                // chai.expect(res.body).to.have.property('observations');
+                chai.expect(res.body.description).to.be.equal("Akureyri");
+                chai.expect(res.body.lat).to.be.equal(65.6826);
+                chai.expect(res.body.lon).to.be.equal(18.0907);
+                chai.expect(Object.keys(res.body).length).to.be.equal(4)
                 done();
-        });
+            });
     });
 
     // 4. GET /api/v1/stations/:stationId/observations
@@ -123,29 +139,6 @@ describe('Endpoint tests', () => {
     it("should make a POST request to /api/v1/stations/:stationId/observations/:obsId", (done) => {
         // {"_id":"5c9f8d87377be533841cf63b","temp":2,"windSpeed":30.5,"windDir":"ne","hum":20.5,"prec":0}
         
-        /* 
-        chai.request('http://localhost:3000')
-            .get('/api/v1/stations/' + String(stationId) + '/observations')
-            .end((err, res) => {
-                chai.expect(res).to.have.status(200);
-                chai.expect(res).to.be.json;
-                chai.expect(res).to.have.property('body').to.be(Array);
-                chai.expect(res.body[0]).to.have.property('_id');
-                chai.expect(res.body[0]).to.have.property('temp');
-                chai.expect(res.body[0]).to.have.property('windSpeed');
-                chai.expect(res.body[0]).to.have.property('windDir');
-                chai.expect(res.body[0]).to.have.property('hum');
-                chai.expect(res.body[0]).to.have.property('prec');
-                chai.expect(res.body[0]._id).to.equal(String(stationId));
-                chai.expect(res.body[0].description).to.be.equal(2);
-                chai.expect(res.body[0].windSpeed).to.be.equal(30.5);
-                chai.expect(res.body[0].windDir).to.be.equal("ne");
-                chai.expect(res.body[0].hum).to.be.equal(20.5);
-                chai.expect(res.body[0].prec).to.be.equal(0);
-                chai.expect(Object.keys(res.body).length).to.equal(6);
-                done();
-        }); 
-        */
         chai.expect(1).to.equal(1);
         done();
     });
