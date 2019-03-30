@@ -156,20 +156,34 @@ describe('Endpoint tests', () => {
     });
     
     // 6. POST /api/v1/stations/:stationId/observations
-    it("should make a POST request to /api/v1/stations/" + String(stationId)+ "/observations", (done) => {
-        let obs = {temp: 5, windSpeed: 23, hum: 34, prec: 42}
-        chai.request('http://localhost:3000')
-        .post('/api/v1/stations/' + String(stationId) + '/observations')
-        .set('Content-Type','application/json')
-        .send(obs)
-        .end((err, res)=> {
-            chai.expect(res).to.have.status(400);
-            chai.expect(res).to.have.property('body');
-            chai.expect(res.body).to.be.a('object');
-            chai.expect(res.body).to.deep.equal({ "message": "Bad request." })
-            done();
-        });
-    });
+    // part A
+    // it("should make a POST request to /api/v1/stations/:stationId/observations", (done) => {
+    //     let obs = {temp: 5, windSpeed: 23, hum: 34, prec: 42}
+    //     chai.request('http://localhost:3000')
+    //     .post('/api/v1/stations/' + String(stationId) + '/observations')
+    //     .set('Content-Type','application/json')
+    //     .send(obs)
+    //     .end((err, res)=> {
+    //         chai.expect(res).to.have.status(400);
+    //         chai.expect(res).to.have.property('body');
+    //         chai.expect(res.body).to.be.a('object');
+    //         chai.expect(res.body).to.deep.equal({ "message": "Bad request." })
+    //         done();
+    //     });
+    // });
+
+    //part B
+    // it("should make a Post request to /api/v1/stations/:stationId/observations with invalid humidity", (done)=>{
+    //     let obs = {temp: 5, windSpeed: 23, hum: 100.1, prec: 42, windDir: "s"}
+    //     chai.request('http://localhost:3000')
+    //     .post('/api/v1/stations/' + String(stationId) + '/observations')
+    //     .set('Content-Type','application/json')
+    //     .send(obs)
+    //     .end((err, res)=> {
+    //         chai.expect(res).to.have.status(400);
+    //         done();
+    //     })
+    // })
     
     // 7. DELETE /api/v1/stations/:stationId/observations/:obsId
     it("should make a DELETE request to /api/v1/stations/:stationId/observations/:obsId", (done) => {
