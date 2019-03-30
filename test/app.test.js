@@ -166,6 +166,7 @@ describe('Endpoint tests', () => {
     })
     // part B
     it("should make a Bad POST request to /api/v1/stations/:stationId/observations", (done) => {
+        console.log = function(){}
         let obs = {temp: 5, windSpeed: 23, hum: 34, prec: 42}
         chai.request('http://localhost:3000')
         .post('/api/v1/stations/' + String(stationId) + '/observations')
@@ -182,6 +183,7 @@ describe('Endpoint tests', () => {
 
     // part C
     it("should make a Post request to /api/v1/stations/:stationId/observations with invalid humidity", (done)=> {
+        console.log = function(){}
         let obs = {temp: 5, windSpeed: 23, hum: 100.1, prec: 42, windDir: "s"}
         chai.request('http://localhost:3000')
         .post('/api/v1/stations/' + String(stationId) + '/observations')
