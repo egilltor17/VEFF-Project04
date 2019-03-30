@@ -67,7 +67,9 @@ describe('Endpoint tests', () => {
     it("should make a get request to stations/id", (done) => {
         chai.request('http://localhost:3000').get('/api/v1/stations/' + String(stationId)).end((err, res) => {
             chai.expect(res).to.have.status(200);
-            chai.expect(res.content-type).to.be.equal("application/json");
+            // console.log(JSON.stringify(res.headers));
+            // chai.expect(res.headers["content-type"]).to.be.equal("application/json; charset=utf-8");
+            chai.expect(res).to.be.json;
             chai.expect(res).to.have.property('body');
             chai.expect(res.body).to.be.an('object');
             chai.expect(res.body).to.have.property('_id');
@@ -85,8 +87,30 @@ describe('Endpoint tests', () => {
         })
     })
 
-    it("should make a post request", (done) => {
-        chai.request('http://localhost:3000').post()
+    it("should make a post request to stations", (done) => {
+        let newStation = {
+            description : "Akureyri",
+            lat : 65.6826,
+            lon : 18.0907
+        }
+        chai.request('http://localhost:3000')
+        .post('/api/v1/stations/')
+        .set("content-type", "application/json")
+        .send(newStation)
+        .end((err, res) => {
+            chai.expect(res).to.have.status(201);
+            chai.expect(res).to.be.json;
+            chai.expect(res.body).to.have.property('_id');
+            chai.expect(res.body).to.have.property('description');
+            chai.expect(res.body).to.have.property('lat');
+            chai.expect(res.body).to.have.property('lon');
+            // chai.expect(res.body).to.have.property('observations');
+            chai.expect(res.body.description).to.be.equal("Akureyri");
+            chai.expect(res.body.lat).to.be.equal(65.6826);
+            chai.expect(res.body.lon).to.be.equal(18.0907);
+            chai.expect(Object.keys(res.body).length).to.be.equal(4)
+            done();
+        })
     })
     
 });
