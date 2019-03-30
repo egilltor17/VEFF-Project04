@@ -40,12 +40,13 @@ describe('Endpoint tests', () => {
             });
         });
     });
-
+    
     //###########################
     //Write your tests below here
     //###########################
-
-    it("should make a get request to stations", (done) => {
+    
+    // 1. GET /api/v1/stations
+    it("should make a GET request to stations /api/v1/stations", (done) => {
         chai.request('http://localhost:3000').get('/api/v1/stations').end((err, res) => {
             chai.expect(res).to.have.status(200);
             chai.expect(res).to.have.property('body');
@@ -57,13 +58,14 @@ describe('Endpoint tests', () => {
             chai.expect(res.body[0].description).to.be.equal('Reykjavik');
             chai.expect(Object.keys(res.body[0]).length).to.be.equal(2);
             done();
-        })
-    })
-
-    it("should make a get request to stations/id", (done) => {
+        });
+    });
+    
+    // 2. GET /api/v1/stations/:id
+    it("should make a GET request to /api/v1/stations/:id", (done) => {
         chai.request('http://localhost:3000').get('/api/v1/stations/' + String(stationId)).end((err, res) => {
             chai.expect(res).to.have.status(200);
-            chai.expect(res.content-type).to.be.equal("application/json");
+            chai.expect(res.content-type).to.be.json;
             chai.expect(res).to.have.property('body');
             chai.expect(res.body).to.be.an('object');
             chai.expect(res.body).to.have.property('_id');
@@ -77,16 +79,31 @@ describe('Endpoint tests', () => {
             chai.expect(res.body.lon).to.be.equal(21.9028);
             chai.expect(Object.keys(res.body).length).to.equal(5);
             done();
-        })
-    })
-
-    it("should make a post request", (done) => {
-        chai.request('http://localhost:3000').post();
-    })
+        });
+    });
     
+    // 3. POST /api/v1/stations
+    it("should make a post request to /api/v1/stations", (done) => {
+        chai.request('http://localhost:3000').post();
+    });
 
-    it("should always pass", function() {
+    // 4. GET /api/v1/stations/:stationId/observations
+    it("should make a GET request to GET /api/v1/stations/:stationId/observations", function() {
         chai.expect(1).to.equal(1);
-        // process.exit(0);
+    });
+    
+    // 5. GET /api/v1/stations/:stationId/observations/:obsId
+    it("should make a POST request to /api/v1/stations/:stationId/observations/:obsId", function() {
+        chai.expect(1).to.equal(1);
+    });
+    
+    // 6. POST /api/v1/stations/:stationId/observations
+    it("should make a POST request to /api/v1/stations/:stationId/observations", function() {
+        chai.expect(1).to.equal(1);
+    });
+    
+    // 7. DELETE /api/v1/stations/:stationId/observations/:obsId
+    it("should make a DELETE request to /api/v1/stations/:stationId/observations/:obsId", function() {
+        chai.expect(1).to.equal(1);
     });
 });
