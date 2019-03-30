@@ -194,4 +194,12 @@ describe('Endpoint tests', () => {
         chai.expect(1).to.equal(1);
         done();
     });
+
+    // 9. invalid verb to /api/v1/stations
+    it("should return 405 if invalid verb sent to /api/v1/stations", (done) => {
+        chai.request('http://localhost:3000').put('/api/v1/stations').end((err, res) => {
+            chai.expect(res).to.have.status(405);
+            done();
+        });
+    });
 });
