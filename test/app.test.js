@@ -11,6 +11,7 @@ let chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 
 describe('Endpoint tests', () => {
+    var consoleLogStorrage = console.log
     //###########################
     //These variables contain the ids of the existing station/observation
     //That way, you can use them in your tests (e.g., to get all observations for a station)
@@ -180,6 +181,7 @@ describe('Endpoint tests', () => {
         .end((err, res)=> {
             chai.expect(res).to.have.status(400);
             done();
+            console.log = consoleLogStorrage
         })
     })
     
