@@ -158,7 +158,7 @@ describe('Endpoint tests', () => {
     })
     // part B
     it("should make a Bad POST request to /api/v1/stations/:stationId/observations", (done) => {
-        // console.log = function(){}
+        console.log = function(){}
         let obs = {temp: 5, windSpeed: 23, hum: 34, prec: 42}
         chai.request('http://localhost:3000')
         .post('/api/v1/stations/' + String(stationId) + '/observations')
