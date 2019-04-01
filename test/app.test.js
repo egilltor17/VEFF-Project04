@@ -33,7 +33,6 @@ describe('Endpoint tests', () => {
                 station.save((err, stat) => {
                     observation.save((err, obs) => {
                         stationId = stat._id;
-                        // console.log(stationId);
                         observationId = obs._id;
                         done();
                     });
@@ -98,7 +97,6 @@ describe('Endpoint tests', () => {
                 chai.expect(res.body).to.have.property('description');
                 chai.expect(res.body).to.have.property('lat');
                 chai.expect(res.body).to.have.property('lon');
-                // chai.expect(res.body).to.have.property('observations');
                 chai.expect(res.body.description).to.be.equal("Akureyri");
                 chai.expect(res.body.lat).to.be.equal(65.6826);
                 chai.expect(res.body.lon).to.be.equal(18.0907);
@@ -115,15 +113,6 @@ describe('Endpoint tests', () => {
                 chai.expect(res).to.have.status(200);
                 chai.expect(res).to.be.json;
                 chai.expect(res).to.have.property('body').an('array');
-                /* 
-                chai.expect(res.body[0]).to.have.property('_id').equal(String(observationId));
-                chai.expect(res.body[0]).to.have.property('temp').equal(2);
-                chai.expect(res.body[0]).to.have.property('windSpeed').equal(30.5);
-                chai.expect(res.body[0]).to.have.property('windDir').equal("ne");
-                chai.expect(res.body[0]).to.have.property('hum').equal(20.5);
-                chai.expect(res.body[0]).to.have.property('prec').equal(0);
-                chai.expect(Object.keys(res.body[0]).length).to.equal(6);
-                 */
                 done();
         });
     });
@@ -164,6 +153,7 @@ describe('Endpoint tests', () => {
     })
     // part B
     it("should make a Bad POST request to /api/v1/stations/:stationId/observations", (done) => {
+        console.log = function(){}
         let obs = {temp: 5, windSpeed: 23, hum: 34, prec: 42}
         chai.request('http://localhost:3000')
         .post('/api/v1/stations/' + String(stationId) + '/observations')
