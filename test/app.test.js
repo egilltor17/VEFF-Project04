@@ -107,6 +107,8 @@ describe('Endpoint tests', () => {
 
     // 4. GET /api/v1/stations/:stationId/observations
     it("should make a GET request to /api/v1/stations/:stationId/observations", (done) => {
+        // [{"_id":"5c9f906681c8aa18a0c3dfc3","temp":2,"windSpeed":30.5,"windDir":"ne","hum":20.5,"prec":0}]
+        
         chai.request('http://localhost:3000')
             .get('/api/v1/stations/' + String(stationId) + '/observations')
             .end((err, res) => {
@@ -180,7 +182,7 @@ describe('Endpoint tests', () => {
             done();
         })
     })
-
+    
     // 7. DELETE /api/v1/stations/:stationId/observations/:obsId
     it("should make a DELETE request to /api/v1/stations/:stationId/observations/:obsId", (done) => {
         chai.request('http://localhost:3000').delete(`/api/v1/stations/${stationId}/observations/${observationId}`).end((err, res) => {
@@ -203,50 +205,46 @@ describe('Endpoint tests', () => {
     it("should denie a DELETE request to /api/v1/stations/:id", (done) => {
         // No authentication.
         chai.request('http://localhost:3000')
-            .delete('/api/v1/stations/' + stationId)
-            .end((err, res) => {
-                chai.expect(res).to.have.status(401);
-                chai.expect(res).to.be.json;
-                chai.expect(res).to.have.property('body');
-                chai.expect(res.body).to.have.property('message').equal("Unauthorised");
-                done();
+        .delete('/api/v1/stations/' + stationId)
+        .end((err, res) => {
+            chai.expect(res).to.have.status(401);
+            chai.expect(res).to.be.json;
+            chai.expect(res).to.have.property('body');
+            chai.expect(res.body).to.have.property('message').equal("Unauthorised");
+            done();
         });
     });
     
     // 8.B DELETE /api/v1/stations/:id
     it("should make a DELETE request to /api/v1/stations/:id", (done) => {
-        chai.request('http://localhost:3000')
-                .delete('/api/v1/stations/' + stationId)
-                .set('authorization', sha256.hmac('mysecret', 'DELETE /api/v1/stations/' + stationId))
-                .end((err, res) => {
-                    chai.expect(res).to.have.status(200);
-                    done();
+    chai.request('http://localhost:3000')
+            .delete('/api/v1/stations/' + stationId)
+            .set('authorization', sha256.hmac('mysecret', 'DELETE /api/v1/stations/' + stationId))
+            .end((err, res) => {
+                chai.expect(res).to.have.status(200);
+                done();
         });
     });
 
-    // 9. Injection attact! ?description={ $ne: "Akureyri" }
-    it('should return "Reykjavik" with GET /api/v1/stations?description={ $ne: "Akureyri" }', (done) => {
+    // 9. Injection attact! ?description=", "$not" : "Reykjavik
+    it('should return wrong entry with GET /api/v1/stations?description=", "$not" : "Reykjavik', (done) => {
         chai.request('http://localhost:3000')
             .get('/api/v1/stations')
-            .query({ description: { $ne: "Akureyri" } })
+            .query({ description: { $ne: "Reykjavik" } })
             .end((err, res) => {
                 chai.expect(res).to.have.status(200);
                 chai.expect(res).to.be.json;
-                chai.expect(res).to.have.property('body').an('array');
-                chai.expect(res.body.length).to.equal(1);
-                chai.expect(res.body[0]).to.have.property('_id');
-                chai.expect(res.body[0]).to.have.property('description').equal('Reykjavik');
-                chai.expect(Object.keys(res.body[0]).length).to.equal(2);
+                chai.expect(res).to.have.property('body');
                 done();
         });
+        
     }); 
 
     // 10. invalid verb to /api/v1/stations
     it("should return 405 if invalid verb sent to /api/v1/stations", (done) => {
-        chai.request('http://localhost:3000').put('/api/v1/stations')
-            .end((err, res) => {
-                chai.expect(res).to.have.status(405);
-                done();
+        chai.request('http://localhost:3000').put('/api/v1/stations').end((err, res) => {
+            chai.expect(res).to.have.status(405);
+            done();
         });
     });
 });
