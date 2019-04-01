@@ -155,7 +155,7 @@ describe('Endpoint tests', () => {
     })
     // part B
     it("should make a Bad POST request to /api/v1/stations/:stationId/observations", (done) => {
-        console.log = function(){}
+        // console.log = function(){}
         let obs = {temp: 5, windSpeed: 23, hum: 34, prec: 42}
         chai.request('http://localhost:3000')
         .post('/api/v1/stations/' + String(stationId) + '/observations')
@@ -194,7 +194,13 @@ describe('Endpoint tests', () => {
             chai.expect(res.body).to.have.property('prec');
             chai.expect(res.body).to.have.property('windSpeed');
             chai.expect(res.body).to.have.property('windDir');       
-            chai.expect(res.body).to.have.property('_id');     
+            chai.expect(res.body).to.have.property('_id');
+            chai.expect(res.body).to.have.property('_id').equal(String(observationId));
+            chai.expect(res.body).to.have.property('temp').equal(2);
+            chai.expect(res.body).to.have.property('windSpeed').equal(30.5);
+            chai.expect(res.body).to.have.property('windDir').equal("ne");
+            chai.expect(res.body).to.have.property('hum').equal(20.5);
+            chai.expect(res.body).to.have.property('prec').equal(0);     
             chai.expect(Object.keys(res.body).length).to.be.equal(6);
             done();
         })
