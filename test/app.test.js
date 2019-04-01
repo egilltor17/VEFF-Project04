@@ -11,7 +11,6 @@ let chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 
 describe('Endpoint tests', () => {
-    var consoleStorage = console.log
     //###########################
     //These variables contain the ids of the existing station/observation
     //That way, you can use them in your tests (e.g., to get all observations for a station)
@@ -55,8 +54,8 @@ describe('Endpoint tests', () => {
                 chai.expect(res).to.have.property('body');
                 chai.expect(res.body).to.be.an('array');
                 chai.expect(res.body.length).to.be.equal(1);
-                chai.expect(res.body[0]).to.have.property('_id').equal(String(stationId));
-                chai.expect(res.body[0]).to.have.property('description').equal('Reykjavik');
+                chai.expect(res.body[0]).to.have.property('_id').equal(String(stationId));;
+                chai.expect(res.body[0]).to.have.property('description').equal('Reykjavik');;
                 chai.expect(Object.keys(res.body[0]).length).to.be.equal(2);
                 done();
         });
@@ -178,7 +177,6 @@ describe('Endpoint tests', () => {
         .send(obs)
         .end((err, res)=> {
             chai.expect(res).to.have.status(400);
-        console.log = consoleStorage 
             done();
         })
     })
