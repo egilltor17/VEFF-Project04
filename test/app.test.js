@@ -11,7 +11,7 @@ let chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 
 describe('Endpoint tests', () => {
-    // We got into some problem at endpoint six tests bc of line #58 in observations.js so later we will disable console log for two test and then recreat it
+    // We disable console log in tests 6 B and C, and then restore it to suppress errors from observation.js
     let consoleLogStorrage = console.log 
 
     //###########################
@@ -54,6 +54,7 @@ describe('Endpoint tests', () => {
                 .get('/api/v1/stations')
                 .end((err, res) => {
                     chai.expect(res).to.have.status(200);
+                    chai.expect(res).to.be.json;
                     chai.expect(res).to.have.property('body').an('array');
                     chai.expect(res.body.length).to.be.equal(1);
                     chai.expect(res.body[0]).to.have.property('_id').equal(String(stationId));
@@ -250,16 +251,17 @@ describe('Endpoint tests', () => {
                     chai.expect(Object.keys(res.body).length).to.equal(1);
                     done();
                 });
-        });
-
-        // 8.B DELETE /api/v1/stations/:id
-        it("should make a DELETE request to /api/v1/stations/:id with authentication", (done) => {
-            // With correct authentication.
-            chai.request('http://localhost:3000')
+            });
+            
+            // 8.B DELETE /api/v1/stations/:id
+            it("should make a DELETE request to /api/v1/stations/:id with authentication", (done) => {
+                // With correct authentication.
+                chai.request('http://localhost:3000')
                 .delete('/api/v1/stations/' + stationId)
                 .set('authorization', sha256.hmac('mysecret', 'DELETE /api/v1/stations/' + stationId))
                 .end((err, res) => {
                     chai.expect(res).to.have.status(200);
+                    chai.expect(res).to.be.json;
                     chai.expect(res.body).to.have.property('_id').equal(String(stationId));
                     chai.expect(res.body).to.have.property('description').equal('Reykjavik');
                     chai.expect(res.body).to.have.property('lat').equal(64.1275);
